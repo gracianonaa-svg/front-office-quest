@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Front Office Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9f1fb;--card:#fff;--ink:#14213d;--mut:#5b6b88;--gold:#f2b632;--teal:#13a89e;--coral:#ef5d5d;--blue:#3b6fe0;--vio:#8a5cf0;--ok:#d9f6ea;--no:#fde0e0;--line:#d5e0f2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1526;--card:#17233d;--ink:#eef3ff;--mut:#9fb0d0;--ok:#124a3c;--no:#512327;--line:#2a3a5c}}
+:root[data-theme="dark"]{--bg:#0d1526;--card:#17233d;--ink:#eef3ff;--mut:#9fb0d0;--ok:#124a3c;--no:#512327;--line:#2a3a5c}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif;font-weight:600;min-height:100vh}
+h1,h2,.f{font-family:Fredoka,Nunito,system-ui,sans-serif}
+.wrap{max-width:880px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:20px}
+button{font:inherit;cursor:pointer;border:0}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn{background:var(--gold);color:#14213d;font-family:Fredoka,sans-serif;font-weight:700;font-size:20px;padding:14px 28px;border-radius:16px;box-shadow:0 5px 0 #b98511}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #b98511}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn2{background:var(--card);color:var(--ink);border:2px solid var(--line);padding:12px 20px;border-radius:14px;font-weight:800}
+.hide{display:none!important}
+/* intro */
+.hero{background:linear-gradient(160deg,#14213d,#233a6b);color:#fff;border-radius:26px;padding:26px 22px;text-align:center;border:0;position:relative;overflow:hidden}
+.hero h1{font-size:clamp(34px,8vw,56px);margin:6px 0 2px;line-height:1}
+.hero p{color:#cdd9f3;margin:6px 0 16px}
+.bell{font-size:64px;display:inline-block;animation:ring 2.2s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes ring{0%,60%,100%{transform:rotate(0)}65%{transform:rotate(14deg)}72%{transform:rotate(-12deg)}80%{transform:rotate(8deg)}88%{transform:rotate(-4deg)}}
+.pill{display:inline-block;background:#ffffff1f;border-radius:99px;padding:6px 14px;margin:3px;font-size:14px}
+.namebox{background:var(--card);color:var(--ink);border-radius:20px;padding:18px;margin-top:18px;text-align:left}
+.namebox label{font-weight:800;display:block;margin-bottom:8px}
+.namebox input{width:100%;font:inherit;font-size:20px;padding:13px 16px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--ink)}
+.namebox input.bad{border-color:var(--coral);animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.err{color:var(--coral);font-weight:800;min-height:22px;margin:6px 0 10px;font-size:14px}
+.board{margin-top:16px;color:var(--ink)}.board li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--line)}
+.board ol{padding-left:20px;margin:6px 0 0}
+/* quiz */
+.top{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.chip{background:var(--card);border:2px solid var(--line);border-radius:99px;padding:6px 14px;font-weight:800;font-size:14px}
+.bar{flex:1;min-width:120px;height:12px;background:var(--line);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--blue);transition:width .4s}
+.timer i{background:var(--teal);transition:width .2s linear}.timer.low i{background:var(--coral)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+@media(max-width:680px){.grid{grid-template-columns:1fr}}
+.scene{height:240px;border-radius:18px;position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:center;gap:2px;padding-bottom:30px}
+.scene::after{content:"";position:absolute;left:0;right:0;bottom:0;height:34px;background:#0000002b}
+.scene span{font-size:clamp(46px,13vw,76px);position:relative;z-index:1;animation:bob 2.4s ease-in-out infinite;display:inline-block}
+.scene span.big{font-size:clamp(70px,18vw,110px)}
+@keyframes bob{50%{transform:translateY(-14px) rotate(-3deg)}}
+.q{font-family:Fredoka,sans-serif;font-size:clamp(20px,4.5vw,26px);font-weight:700;line-height:1.25;margin:0 0 12px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;padding:13px 14px;border-radius:16px;color:#fff;font-weight:800;font-size:16px;box-shadow:0 4px 0 #0003;transition:transform .1s}
+.opt:hover:not([disabled]){transform:translateY(-2px)}
+.opt b{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#ffffff38;flex:none;font-family:Fredoka}
+.o0{background:var(--blue)}.o1{background:var(--teal)}.o2{background:var(--vio)}.o3{background:#e0722f}
+.opt.right{background:#16a066!important;animation:pop .4s}
+.opt.wrong{background:var(--coral)!important}
+.opt[disabled]{cursor:default}.opt[disabled]:not(.right):not(.wrong){opacity:.45}
+@keyframes pop{50%{transform:scale(1.04)}}
+.fb{margin-top:12px;border-radius:14px;padding:12px 14px;font-weight:800}
+.fb.ok{background:var(--ok)}.fb.no{background:var(--no)}
+.hint{background:#fff3cf;color:#5a4300;border-radius:14px;padding:10px 14px;font-size:14px;margin-top:10px}
+.row{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:12px}
+/* result */
+.res{text-align:center}
+.trophy{font-size:84px;animation:bob 2s infinite}
+.score{font-family:Fredoka;font-size:64px;font-weight:700;line-height:1}
+.stars{font-size:34px;letter-spacing:4px}
+.conf{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:5}
+.conf i{position:absolute;top:-20px;width:10px;height:16px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
+.rev{text-align:left;margin-top:14px;max-height:260px;overflow:auto}
+.rev div{padding:7px 0;border-bottom:1px dashed var(--line);font-size:14px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div class="wrap">
+
+<section id="intro" class="card hero">
+  <div class="bell" aria-hidden="true">🛎️</div>
+  <h1>Front Office Quest</h1>
+  <p>Belajar bahasa Inggris perhotelan lewat permainan seru</p>
+  <span class="pill">🎯 10 pertanyaan</span><span class="pill">⏱️ 20 detik / soal</span><span class="pill">🔥 Bonus beruntun</span>
+  <div class="namebox">
+    <label for="nm">Siapa namamu? Isi dulu untuk mulai bermain</label>
+    <input id="nm" maxlength="30" autocomplete="name" placeholder="Contoh: Gracia Souisa">
+    <div class="err" id="err" role="alert"></div>
+    <button class="btn" id="go" disabled style="width:100%">Mulai Kuis ▶</button>
+    <div class="board hide" id="board"><b class="f">🏆 Papan skor di perangkat ini</b><ol id="bl"></ol></div>
+  </div>
+</section>
+
+<section id="game" class="hide">
+  <div class="top">
+    <span class="chip" id="who">👤</span><span class="chip" id="cnt">1/10</span>
+    <span class="chip">⭐ <span id="pts">0</span></span><span class="chip" id="streak">🔥 0</span>
+    <button class="chip" id="snd" aria-label="Suara">🔊</button>
+  </div>
+  <div class="bar"><i id="pg"></i></div>
+  <div class="bar timer" id="tm" style="margin-top:8px"><i id="tmi" style="width:100%"></i></div>
+  <div class="card grid" style="margin-top:12px">
+    <div><div class="scene" id="scene"></div><div class="hint hide" id="hint"></div></div>
+    <div><h2 class="q" id="q"></h2><div class="opts" id="opts"></div>
+      <div class="fb hide" id="fb"></div>
+      <div class="row"><button class="btn2" id="hb">💡 Petunjuk</button><button class="btn hide" id="nx">Lanjut ▶</button></div>
+    </div>
+  </div>
+</section>
+
+<section id="end" class="card res hide" aria-live="polite">
+  <div class="trophy">🏆</div>
+  <h2 class="f" style="margin:6px 0">Kuis Selesai!</h2>
+  <div id="en" class="f" style="font-size:22px"></div>
+  <div class="score"><span id="sc">0</span>/10</div>
+  <div class="stars" id="st"></div>
+  <p id="msg" style="font-size:18px"></p>
+  <div class="chip" style="display:inline-block">⭐ Total poin: <span id="tp">0</span></div>
+  <div class="rev" id="rev"></div>
+  <div class="row" style="justify-content:center;margin-top:18px;flex-wrap:wrap">
+    <button class="btn" id="again">↻ Main Lagi</button><button class="btn2" id="home">🏠 Beranda</button>
+  </div>
+</section>
+</div>
+
+<script>
+const Q=[
+{s:["🚪","🙋‍♀️","🏨"],bg:"#ffd9a0,#ffb36b",t:"A guest enters the hotel lobby. What should the receptionist say first?",a:"Good morning. Welcome to our hotel.",w:["What do you want?","Give me your room key.","Please wait outside."],h:"Think of a polite greeting!",e:"A warm, polite greeting makes a great first impression."},
+{s:["📅","🧳","💁"],bg:"#cfe3ff,#8fb8ff",t:"A guest wants to make a hotel reservation. What should the receptionist ask?",a:"How many nights will you stay?",w:["May I know your favorite food?","Where did you buy your clothes?","What is your job?"],h:"A reservation needs dates.",e:"The length of stay is important for a booking."},
+{s:["🛏️","🧳","👋"],bg:"#d8ccff,#a58bf5",t:"What does “check-out” mean in a hotel?",a:"The process of leaving the hotel after a stay.",w:["The process of booking a room.","The process of cleaning a room.","The process of ordering food."],h:"Think about the last day of a stay.",e:"Check-out is when guests pay and leave the hotel."},
+{s:["🔑","🙋‍♂️","🛗"],bg:"#c8f2e4,#6fd8b8",t:"The receptionist hands over the key. Which sentence is correct?",a:"Here is your room key. Your room is on the fifth floor.",w:["Take this. Go away.","You find your room yourself.","I don’t know your room."],h:"Be helpful and clear.",e:"Give the key and tell the room location politely."},
+{s:["😠","🔊","🛏️"],bg:"#ffd3d3,#ff9b9b",t:"A guest says, “My room is too noisy.” What is the best response?",a:"I’m sorry for the inconvenience. I will change your room.",w:["That is not my problem.","Everyone likes noise.","Please sleep in the lobby."],h:"Apologize and offer a solution.",e:"Handle complaints by apologizing and solving the problem."},
+{s:["🪪","🛂","💁‍♀️"],bg:"#fff0b8,#ffd75e",t:"During check-in, what should the receptionist ask for?",a:"May I see your ID or passport, please?",w:["Can I borrow your phone?","What is your favorite song?","Do you have a pet fish?"],h:"The hotel must verify who the guest is.",e:"Guest identity is checked with an ID or passport."},
+{s:["🧳","🛒","🤵"],bg:"#d9efff,#8cd0ff",t:"The bellboy sees a guest with heavy bags. What does he say?",a:"May I help you with your luggage, sir?",w:["Your bags are too heavy.","Carry it yourself.","Where is my tip?"],h:"“May I…” is a polite offer.",e:"“May I help you…?” is a polite way to offer help."},
+{s:["⏰","😴","📞"],bg:"#e3dcff,#b6a4ff",t:"A guest needs to wake up early. What does the receptionist ask?",a:"What time would you like your wake-up call?",w:["Why do you sleep so much?","Do you like alarms?","Is your bed soft?"],h:"Think about the time.",e:"A wake-up call needs a specific time."},
+{s:["💳","💵","🧾"],bg:"#d4f5d0,#8fdc86",t:"At the cashier, what should the receptionist ask?",a:"How would you like to pay, cash or credit card?",w:["Why do you have so much money?","Can I keep your wallet?","Is your card pretty?"],h:"Ask about the payment method.",e:"Offer the payment options clearly."},
+{s:["👋","🚕","🧳"],bg:"#ffe0c2,#ffaf7a",t:"The guest is leaving. Which farewell is best?",a:"Thank you for staying with us. Have a safe trip!",w:["Finally, you are leaving.","Don’t come back.","Pay and go."],h:"End with warm words.",e:"A friendly goodbye invites guests to return."}
+];
+const $=id=>document.getElementById(id);
+let name="",i=0,score=0,pts=0,streak=0,tl=20,tk=null,done=false,log=[],snd=true,ac;
+const beep=(f,d=.12)=>{if(!snd)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.08;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}};
+const shuffle=a=>{a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a};
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function show(id){["intro","game","end"].forEach(x=>$(x).classList.toggle("hide",x!==id));window.scrollTo(0,0)}
+function loadBoard(){let b=[];try{b=JSON.parse(localStorage.getItem("fo_board")||"[]")}catch(e){}return b}
+function drawBoard(){const b=loadBoard();$("board").classList.toggle("hide",!b.length);$("bl").innerHTML=b.map(r=>`<li><span>${esc(r.n)}</span><span>${r.p} poin · ${r.s}/10</span></li>`).join("")}
+function validName(){return $("nm").value.trim().length>=2}
+$("nm").addEventListener("input",()=>{$("go").disabled=!validName();$("err").textContent="";$("nm").classList.remove("bad")});
+$("nm").addEventListener("keydown",e=>{if(e.key==="Enter")start()});
+function start(){
+  if(!validName()){$("err").textContent="Isi namamu dulu ya, baru bisa mulai menjawab.";$("nm").classList.add("bad");$("nm").focus();return}
+  name=$("nm").value.trim();i=0;score=0;pts=0;streak=0;log=[];$("who").textContent="👤 "+name;show("game");load();beep(660)}
+$("go").onclick=start;
+function load(){
+  const q=Q[i];done=false;
+  $("cnt").textContent=`${i+1}/10`;$("pg").style.width=(i/10*100)+"%";$("pts").textContent=pts;$("streak").textContent="🔥 "+streak;
+  const [c1,c2]=q.bg.split(",");$("scene").style.background=`linear-gradient(180deg,${c1},${c2})`;
+  $("scene").innerHTML=q.s.map((e,k)=>`<span class="${k===1?"big":""}" style="animation-delay:${k*.35}s">${e}</span>`).join("");
+  $("q").textContent=q.t;$("hint").textContent="💡 "+q.h;$("hint").classList.add("hide");$("hb").classList.remove("hide");
+  $("fb").classList.add("hide");$("nx").classList.add("hide");
+  $("opts").innerHTML=shuffle([q.a,...q.w]).map((o,k)=>`<button class="opt o${k}" data-v="${esc(o)}"><b>${"ABCD"[k]}</b><span>${esc(o)}</span></button>`).join("");
+  [...document.querySelectorAll(".opt")].forEach(b=>b.onclick=()=>answer(b.dataset.v,b));
+  tl=20;clearInterval(tk);tick();tk=setInterval(()=>{tl-=.2;tick();if(tl<=0)answer(null)},200)}
+function tick(){$("tmi").style.width=Math.max(tl,0)/20*100+"%";$("tm").classList.toggle("low",tl<=6)}
+$("hb").onclick=()=>{$("hint").classList.remove("hide");$("hb").classList.add("hide")};
+function answer(v,btn){
+  if(done)return;
+  if(!name){show("intro");return}  // guard: nama wajib diisi
+  done=true;clearInterval(tk);const q=Q[i],ok=v===q.a;
+  document.querySelectorAll(".opt").forEach(b=>{b.disabled=true;if(b.dataset.v===q.a)b.classList.add("right")});
+  if(ok){score++;streak++;const g=100+Math.round(tl*5)+(streak>1?(streak-1)*20:0);pts+=g;beep(880,.2);$("fb").className="fb ok";$("fb").textContent=`✅ Benar! +${g} poin. ${q.e}`}
+  else{streak=0;if(btn)btn.classList.add("wrong");beep(220,.3);$("fb").className="fb no";$("fb").textContent=(v===null?"⏰ Waktu habis. ":"❌ Belum tepat. ")+q.e}
+  log.push({q:q.t,ok,a:q.a});$("pts").textContent=pts;$("streak").textContent="🔥 "+streak;
+  $("hb").classList.add("hide");$("nx").classList.remove("hide");$("nx").textContent=i===9?"Lihat Hasil ▶":"Lanjut ▶";$("nx").focus()}
+$("nx").onclick=()=>{if(i<9){i++;load()}else finish()};
+function finish(){
+  clearInterval(tk);$("pg").style.width="100%";show("end");
+  $("en").textContent=name;$("sc").textContent=score;$("tp").textContent=pts;
+  const n=score>=9?3:score>=7?2:score>=4?1:0;$("st").textContent="⭐".repeat(n)+"☆".repeat(3-n);
+  $("msg").textContent=score>=9?"Luar biasa! Kamu siap jadi resepsionis handal.":score>=7?"Great job! Sedikit lagi sempurna.":score>=4?"Lumayan! Coba lagi untuk skor lebih tinggi.":"Jangan menyerah, pelajari lagi dan coba ulang.";
+  $("rev").innerHTML=log.map((l,k)=>`<div>${l.ok?"✅":"❌"} ${k+1}. ${esc(l.a)}</div>`).join("");
+  try{const b=loadBoard();b.push({n:name,p:pts,s:score});b.sort((x,y)=>y.p-x.p);localStorage.setItem("fo_board",JSON.stringify(b.slice(0,5)))}catch(e){}
+  if(score>=7)confetti();beep(1040,.3)}
+function confetti(){const c=document.createElement("div");c.className="conf";const cols=["#f2b632","#3b6fe0","#13a89e","#ef5d5d","#8a5cf0"];
+  for(let k=0;k<60;k++){const p=document.createElement("i");p.style.cssText=`left:${Math.random()*100}%;background:${cols[k%5]};animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.8}s`;c.appendChild(p)}
+  document.body.appendChild(c);setTimeout(()=>c.remove(),5000)}
+$("again").onclick=()=>{i=0;score=0;pts=0;streak=0;log=[];show("game");load()};
+$("home").onclick=()=>{drawBoard();show("intro");$("nm").focus()};
+$("snd").onclick=()=>{snd=!snd;$("snd").textContent=snd?"🔊":"🔇"};
+drawBoard();
+</script></body></html>
